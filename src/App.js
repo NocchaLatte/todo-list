@@ -1,8 +1,14 @@
+import React, { useState } from 'react';
+import Header from './components/Header';
+import InputTask from './components/InputTask';
+import TaskList from './components/TaskList';
+import Footer from './components/Footer';
+
 function App() {
     const [tasks, setTasks] = useState([]);
   
-    const addTask = (task) => {
-      setTasks([...tasks, { text: task, completed: false }]);
+    const addTask = (task, dueDate) => {
+      setTasks([...tasks, { text: task, dueDate, completed: false }]);
     };
   
     const toggleComplete = (index) => {
