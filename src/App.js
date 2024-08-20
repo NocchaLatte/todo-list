@@ -1,36 +1,38 @@
-import React, {useState, useEffect} from "react";
-import axios from "axios";
-import TodoList from "./components/TodoList";
-import AddTodo from "./components/AddTodo";
-
-const App = () => {
-    const [todos, setTodos] = useState([]);
-
-    // Fetch todos from the server  when the component mounts
-    useEffect(() => {
-        axios.get("http://localhost:5000/api/todos/")
-        .then(res => setTodos(res.data))
-        .catch(err => console.log(err));
-    }, []);
-    
-    // Add a new todo to the server
-    const addTodo = (todo) => {
-        axios.post("http://localhost:5000/api/todos/", todo)
-        .then(res => setTodos([...todos, res.data]))
-        .catch(err => console.log(err));
-    }
-
-    // Delete a todo from the server
-    const deleteTodo = (id) => {
-        axios.delete(`http://localhost:5000/api/todos/${id}`)
-        .then(res => setTodos(todos.filter(todo => todo._id !== id)))
-        .catch(err => console.log(err));
-    }
-
+function App() {
+    const [tasks, setTasks] = useState([]);
+  
+    const addTask = (task) => {
+      setTasks([...tasks, { text: task, completed: false }]);
+    };
+  
+    const toggleComplete = (index) => {
+      const newTasks = [...tasks];
+      newTasks[index].completed = !newTasks[index].completed;
+      setTasks(newTasks);
+    };
+  
+    const deleteTask = (index) => {
+      const newTasks = tasks.filter((_, i) => i !== index);
+      setTasks(newTasks);
+    };
+  
+    const clearCompleted = () => {
+      const newTasks = tasks.filter(task => !task.completed);
+      setTasks(newTasks);
+    };
+  
     return (
-        <div>
-            <AddTodo addTodo={addTodo} />
-            <TodoList todos={todos} deleteTodo={deleteTodo} />
-        </div>
+      <div className="App">
+        <Header />
+        <InputTask addTask={addTask} />
+        <TaskList 
+          tasks={tasks} 
+          toggleComplete={toggleComplete} 
+          deleteTask={deleteTask} 
+        />
+        <Footer tasks={tasks} clearCompleted={clearCompleted} />
+      </div>
     );
-}
+  }
+  
+  export default App;
